@@ -1,4 +1,94 @@
-# personal-coach
+## Project Overview - Personal health coach
+
+NOTE: This is **my submssion** for the [AI Agents: Intensive Vibe Coding Capstone Project](https://www.kaggle.com/competitions/vibecoding-agents-capstone-project/overview).
+
+This project contains the core logic of the “Agent Personal Health” agent, a multi-agent system designed to assist users in the areas of personal health, fitness, well-being, nutrition, and physical activity tracking. (e.g. daily steps, heart rate, sleep metrics, personal workout summaries, weight/height). The agent is built using Google Antigravity and Google Agent Development Kit (ADK) and follows a modular architecture.
+
+
+## Problem statement
+
+Recently, we have noticed that AI is becoming increasingly prevalent in sports (Fitbit, Strava, etc.), as well as in wellness and mindfulness (sleep duration, resting heart rate, heart rate variability, etc.).
+
+The idea behind this concept is to determine whether an agent can replace a professional, for example, in analyzing sleep, weekly activities, resting heart rate, and heart rate variability. Based on historical data, the person’s age, and gender, the agent should be able to provide recommendations. In our study, we are focusing exclusively on healthy individuals. Therefore, we will not take nutritional aspects or activity planning into account.
+
+To make our case study a little more interactive, we’re adding the ability for users to ask the agent general medical questions, such as: “Find me some medical articles on dietary supplements.”
+We’re describing only the back-end portion. The front-end portion is not described.
+
+## Solution statement
+
+AI agents provide the ideal architecture for personalized health and fitness analysis, for several compelling reasons:
+Multi-agent systems allow us to create experts specialized in specific fields. A coaching agent, for example, focuses on exercise science, training progression, and sleep quality. This specialization results in higher-quality and more precise recommendations than those provided by a single generalist agent. Another generalist agent could provide insights on general health or sports-related health.
+
+
+## Architecture
+
+![Architecture](./flow_adk.png "Architecture")
+
+**Orchestrator**
+
+This is the classifier for a personal coach assistant. This agent read the user's query and decide whether it is a general knowledge question (requesting research papers, publications, literature databases), or a health question related to personal health (fitness, wellness, nutrition, exercices tracking).
+
+**General knowledge: `pubmd_researcher`**
+
+This agent queries the MCP server for any questions regarding general health knowledge and searches for medical publications
+
+**Health and wellness coach: `health_researcher`**
+
+This is the expert health and wellness coach. It can answer the user's question by fetching their actual personal data using the resting health summary and exercise activities tools. It can use the tools when the query involves sleep, steps, heart rate, weight, height, or specific workout sessions (e.g. bike rides, muscle building).
+
+**Output formatter: `pubmed_formatter`**
+
+The Agent `pubmed_formatter` construct a structured response with a short label describing the scientific field (e.g. 'Genetics', 'Virology', 'Oncology', 'Cardiology', 'Immunology').
+
+
+**Output formatter: `health_formatter`**
+
+The Agent `health_formatter` construct a personalized coaching response. The agent is not a licensed medical professional. It always recommend consulting a qualified healthcare provider.
+
+**Tools**
+
+The `get_resting_health_summary` function retrieves the daily metrics from the user's resting health summary. This includes weight, height, age, resting heart rate, heart rate variability (HRV), daily steps, and detailed sleep phase durations (REM, deep, light sleep, total sleep minutes, bed time, wake up time). The output is a list of dictionaries, where each dictionary represents one day of resting health metrics.
+
+The `get_exercise_activities` function retrieves user's logged physical exercises and workout activities. This includes exercise name (e.g. Outdoor Bike, muscle building), activity date, duration (minutes), average heart rate, elevation gain, distance, speed, and calories burned. The ouput is a list of dictionaries, where each dictionary represents one logged exercise session.
+
+The `pubmed_mcp_toolset` class connect to the MCP server. The transport type is STDIO.
+
+**MCP server**
+
+To communicate with the MCP server, we added the following configuration to the file ~/.gemini/config/mcp_config.json).
+```
+"mcpServers": {
+    "pubmed-mcp-server": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@cyanheads/pubmed-mcp-server@latest"],
+      "env": {
+        "MCP_TRANSPORT_TYPE": "stdio",
+        "MCP_LOG_LEVEL": "info",
+        "NCBI_API_KEY": "58d9b1a14d9cbb693d92528e43ceaf6e3e09"
+      }
+    }
+  }
+```
+
+### Conclusion
+
+Our idea was to demonstrate that an agent can take the place of a coach, but only under certain conditions. The recommendations provided by the agent are relevant, but they are no substitute for a qualified professional.
+
+We can easily improve the product by adding a nutrition specialist. Or by adding more exercise data, such as time spent in heart rate zones and the TSS (Training Stress Score). This will make the results even more relevant.
+
+
+## Key Concepts Demonstrated
+
+| Concept | Implementation |
+|---|---|
+| ✅ **Multi-Agent System (ADK)** | `agent.py` — Orchestrator routes between general knowledge and agent coach |
+| ✅ **MCP Server** | `mcp/server.py` — reads from PubMed |
+| ✅ **MCP client** | `mcp/client.py` — connect to MCP server |
+| ✅ **Agents CLI** | `agents-cli-manifest.yaml` — standardized agent deployment |
+| ✅ **Antigravity IDE** | Built and debugged entirely using Antigravity AI IDE |
+
+
 
 Simple ReAct agent
 Agent generated with `agents-cli` version `0.5.0`
@@ -7,15 +97,29 @@ Agent generated with `agents-cli` version `0.5.0`
 
 ```
 personal-coach/
-├── app/         # Core agent code
+├── app/                       # Core agent code
 │   ├── agent.py               # Main agent logic
 │   └── app_utils/             # App utilities and helpers
+├── tools.py                   # Custom tools used by the agent
 ├── tests/                     # Unit, integration, and load tests
 ├── GEMINI.md                  # AI-assisted development guide
 └── pyproject.toml             # Project dependencies
+└── mcp/                       # MCP
+│   ├── server.py              # MCP server 
+│   ├── client.py              # MCP client
+│   └── pubmed_client.py       # PubMed MCP client
 ```
 
-> 💡 **Tip:** Use [Gemini CLI](https://github.com/google-gemini/gemini-cli) for AI-assisted development - project context is pre-configured in `GEMINI.md`.
+## Worflow
+
+The `Personal coach agent` follows this workflow:
+
+1.  **Worflow:**: Start with classifier_agent.
+2.  **Routing:**: Route to health_agent or pubmd_researcher agent.
+3.  **Health agent:**: health_agent uses tools get_resting_health_summary and get_exercise_activities to get user's data.
+4.  **General knowledge agent:**: pubmd_researcher agent uses MCP client to get data from PubMed.
+5.  **Output formatter:**: Format health_formatter or pubmed_formatter
+
 
 ## Requirements
 
@@ -24,6 +128,7 @@ Before you begin, ensure you have:
 - **agents-cli**: Agents CLI - Install with `uv tool install google-agents-cli`
 - **Google Cloud SDK**: For GCP services - [Install](https://cloud.google.com/sdk/docs/install)
 
+> 💡 **Tip:** Use [Gemini CLI](https://github.com/google-gemini/gemini-cli) for AI-assisted development - project context is pre-configured in `GEMINI.md`.
 
 ## Quick Start
 

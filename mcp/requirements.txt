@@ -1,0 +1,3 @@
+mcp>=1.0.0
+biopython>=1.80
+cmcp>=0.1.0
