@@ -5,7 +5,7 @@ def search_pubmed(query: str, max_results: int = 5):
     Searches PubMed for a given query and returns a list of article details.
     """
     # Always tell NCBI who you are
-    Entrez.email = "tiics@wanadoo.fr"
+    Entrez.email = "test@example.com"
     
     # Search PubMed and get a list of PMIDs
     handle = Entrez.esearch(db="pubmed", term=query, retmax=str(max_results))

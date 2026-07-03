@@ -65,7 +65,7 @@ To communicate with the MCP server, we added the following configuration to the 
       "env": {
         "MCP_TRANSPORT_TYPE": "stdio",
         "MCP_LOG_LEVEL": "info",
-        "NCBI_API_KEY": "58d9b1a14d9cbb693d92528e43ceaf6e3e09"
+        "NCBI_API_KEY": "000000000000000000000000000000"
       }
     }
   }
