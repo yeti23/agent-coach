@@ -53,7 +53,7 @@ The `get_exercise_activities` function retrieves user's logged physical exercise
 
 The `pubmed_mcp_toolset` class connect to the MCP server. The transport type is STDIO.
 
-**MCP server**
+**MCP with `https://github.com/cyanheads/pubmed-mcp-server`**
 
 To communicate with the MCP server, we added the following configuration to the file ~/.gemini/config/mcp_config.json).
 ```
@@ -70,6 +70,14 @@ To communicate with the MCP server, we added the following configuration to the 
     }
   }
 ```
+
+This solution works well and allows you to run complex queries.
+
+**MCP server & client**
+
+The other option is to set up an MCP server to connect to PubMed. We created a directory named “mcp” and added the file “pubmed_server.py,” an interface for the PubMed server. We use BioPyton's `Entrez` module for the connection.
+We use `server.py` as the MCP server, and `client.py` is a client for validating requests.
+
 
 ### Conclusion
 
@@ -114,11 +122,12 @@ personal-coach/
 
 The `Personal coach agent` follows this workflow:
 
-1.  **Worflow:**: Start with classifier_agent.
-2.  **Routing:**: Route to health_agent or pubmd_researcher agent.
-3.  **Health agent:**: health_agent uses tools get_resting_health_summary and get_exercise_activities to get user's data.
-4.  **General knowledge agent:**: pubmd_researcher agent uses MCP client to get data from PubMed.
-5.  **Output formatter:**: Format health_formatter or pubmed_formatter
+1.  **Worflow:** Start with classifier_agent.
+2.  **Routing:** Route to health_agent or pubmd_researcher agent.
+3.  **Health agent:** health_agent uses tools get_resting_health_summary and get_exercise_activities to get user's data.
+4.  **General knowledge agent:** pubmd_researcher agent uses MCP client to get data from PubMed.
+5.  **Agent Skills:** skills/exercise-week skills/user-summary
+6.  **Output formatter:** Format health_formatter or pubmed_formatter
 
 
 ## Requirements

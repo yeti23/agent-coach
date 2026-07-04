@@ -38,6 +38,20 @@ from pydantic import BaseModel
 
 from app.tools import get_exercise_activities, get_resting_health_summary
 
+import pathlib
+from google.adk.skills import load_skill_from_dir
+# Resolve the path to your custom skill directory
+SKILL_DIR = pathlib.Path(__file__).parent / "skills"
+# Load the skill (it automatically reads SKILL.md and parses any assets/references)
+user_summary_skill = load_skill_from_dir(SKILL_DIR / "user-summary")
+activity_skill = load_skill_from_dir(SKILL_DIR / "exercise-week")
+
+from google.adk.tools import skill_toolset
+# Group your loaded skills under a SkillToolset
+skills_toolset = skill_toolset.SkillToolset(
+    skills=[user_summary_skill, activity_skill]
+)
+
 # ---------------------------------------------------------------------------
 # PubMed MCP toolset connection
 # ---------------------------------------------------------------------------
@@ -211,7 +225,7 @@ health_researcher = LlmAgent(
         "Synthesize this personal data with evidence-based health coaching to provide "
         "personalized, helpful recommendations."
     ),
-    tools=[get_resting_health_summary, get_exercise_activities],
+    tools=[get_resting_health_summary, get_exercise_activities, skills_toolset],
 )
 
 health_formatter = LlmAgent(
