@@ -128,7 +128,10 @@ personal-coach/
 ├── tests/                     # Unit, integration, and load tests
 ├── GEMINI.md                  # AI-assisted development guide
 ├── pyproject.toml             # Project dependencies
-└── mcp/                       # MCP
+└── data/                      # User data
+│   ├── user_health_summary.csv
+│   └── user_exercise_activities.csv
+└── mcp/                       # PubMed MCP server
     ├── server.py              # MCP server 
     ├── client.py              # MCP client
     └── pubmed_client.py       # PubMed MCP client
@@ -202,11 +205,25 @@ Edit your agent logic in `app/agent.py` and test with `agents-cli playground` - 
 
 ## Deployment
 
-```bash
-gcloud config set project <your-project-id>
-agents-cli deploy
+> **Note:** Update `pubmed_mcp_toolset` in `agent.py` if using the MCP server.
+
+In Antigravity, you can deploy the agent by running the following command:
+1. Prepare for production deployment
+```
+Scaffold the production deployment files for Agent Runtime.
 ```
 
+2. Packaging and local verification
+```
+Lock my python dependencies and run a dry-run deployment to check for any
+configuration or dependency issues.
+```
+
+3. Deploy to Agent Runtime
+```
+Deploy this agent to Agent Runtime.
+
+```
 To add CI/CD and Terraform, run `agents-cli scaffold enhance`.
 To set up your production infrastructure, run `agents-cli infra cicd`.
 

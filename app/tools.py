@@ -20,7 +20,7 @@ import os
 
 # Resolve personal-data directory dynamically relative to this file
 _PERSONAL_DATA_DIR = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "..", "personal-data")
+    os.path.join(os.path.dirname(__file__), "..", "data")
 )
 
 
