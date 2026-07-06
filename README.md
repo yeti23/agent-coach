@@ -126,7 +126,6 @@ personal-coach/
 │       └── exercise-week/     # exercise-week skill
 ├── tools.py                   # Custom tools used by the agent
 ├── tests/                     # Unit, integration, and load tests
-├── GEMINI.md                  # AI-assisted development guide
 ├── pyproject.toml             # Project dependencies
 └── data/                      # User data
 │   ├── user_health_summary.csv
@@ -154,8 +153,6 @@ Before you begin, ensure you have:
 - **uv**: Python package manager (used for all dependency management in this project) - [Install](https://docs.astral.sh/uv/getting-started/installation/) ([add packages](https://docs.astral.sh/uv/concepts/dependencies/) with `uv add <package>`)
 - **agents-cli**: Agents CLI - Install with `uv tool install google-agents-cli`
 - **Google Cloud SDK**: For GCP services - [Install](https://cloud.google.com/sdk/docs/install)
-
-> 💡 **Tip:** Use [Gemini CLI](https://github.com/google-gemini/gemini-cli) for AI-assisted development - project context is pre-configured in `GEMINI.md`.
 
 ## Quick Start
 
@@ -222,11 +219,4 @@ configuration or dependency issues.
 3. Deploy to Agent Runtime
 ```
 Deploy this agent to Agent Runtime.
-
 ```
-To add CI/CD and Terraform, run `agents-cli scaffold enhance`.
-To set up your production infrastructure, run `agents-cli infra cicd`.
-
-## Observability
-
-Built-in telemetry exports to Cloud Trace, BigQuery, and Cloud Logging.

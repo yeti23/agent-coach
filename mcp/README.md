@@ -2,6 +2,8 @@
 
 This repository contains a Model Context Protocol (MCP) server that connects to the PubMed database to search and retrieve biomedical literature. It also includes clients and configurations for programmatic and command-line interaction.
 
+This server/client MCP should be depoyed separately.
+
 ## Project Structure
 
 - `server.py`: The MCP server built with `FastMCP`, exposing the `search_papers` tool.
